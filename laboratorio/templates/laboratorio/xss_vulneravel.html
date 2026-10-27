@@ -1,0 +1,26 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}XSS vulnerável | SecureLab{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">LABORATÓRIO 02 · COMPARAÇÃO</span>
+    <h1>XSS — exemplo vulnerável</h1>
+    <p>Esta tela é intencionalmente insegura para demonstrar o risco. Use somente em localhost.</p>
+</div>
+<div class="warning"><strong>Atenção:</strong> o conteúdo salvo abaixo é interpretado como HTML por causa de uma chamada
+    insegura a <code>mark_safe()</code> na view.</div>
+<div class="two-col">
+    <section class="panel">
+        <h2>Publicar mensagem de teste</h2>
+        <form method="post">{% csrf_token %}<label for="mensagem">Mensagem</label><textarea id="mensagem"
+                name="mensagem" rows="4" maxlength="500" placeholder="Digite uma mensagem de teste"></textarea><button
+                type="submit">Salvar mensagem</button></form>
+        <p class="help">Teste didático: <code>&lt;script&gt;alert('XSS de demonstração')&lt;/script&gt;</code></p>
+    </section>
+    <section class="panel danger-panel">
+        <div class="status status-danger">VULNERÁVEL · NÃO USAR EM PRODUÇÃO</div>
+        <h2>Conteúdo interpretado pelo navegador</h2>
+        <div class="message-output">{% if mensagem %}{{ mensagem }}{% else %}<span class="muted">Sua mensagem aparecerá
+                aqui.</span>{% endif %}</div>
+    </section>
+</div>
+<p><a href="{% url 'xss_protegido' %}">← Voltar à página protegida</a></p>
+{% endblock %}

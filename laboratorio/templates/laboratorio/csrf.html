@@ -1,0 +1,46 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}CSRF | SecureLab{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">LABORATÓRIO 03</span>
+    <h1>Cross-Site Request Forgery (CSRF)</h1>
+    <p>Altere uma preferência fictícia e compare uma rota protegida com uma rota de demonstração sem validação CSRF.</p>
+</div>
+{% if modo == "vulneravel" %}<div class="warning"><strong>Rota vulnerável:</strong> esta view foi isenta da validação
+    CSRF intencionalmente. Não use esse padrão em aplicações reais.</div>{% else %}<div class="success-note">
+    <strong>Rota protegida:</strong> o middleware do Django verifica o token enviado pelo formulário.</div>{% endif %}
+<div class="two-col">
+    <section class="panel">
+        <h2>Preferência atual</h2>
+        <div class="preference">{{ preferencia.valor|title }}</div>
+        <p class="muted">Este valor é fictício e serve apenas para a demonstração.</p>
+        <form method="post">
+            {% if modo != "vulneravel" %}{% csrf_token %}{% endif %}
+            <label for="valor">Escolha um tema</label><select id="valor" name="valor">
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="roxo">Roxo</option>
+            </select>
+            <button type="submit">Alterar preferência</button>
+        </form>{% if aviso %}<p class="error">{{ aviso }}</p>{% endif %}
+    </section>
+    <section class="panel">
+        <h2>Comparação</h2>
+        <p><strong>Protegida:</strong> inclui
+            <code>{% templatetag openblock %} csrf_token {% templatetag closeblock %}</code> e usa o middleware padrão.
+        </p>
+        <p><strong>Vulnerável:</strong> não verifica o token. Um site malicioso poderia tentar induzir o navegador da
+            vítima a enviar uma requisição, dependendo das condições de autenticação e cookies.</p>
+        {% if modo == "vulneravel" %}<a class="button button-secondary" href="{% url 'csrf_protegido' %}">Ir para a rota
+            protegida</a>{% else %}<a class="button button-secondary" href="{% url 'csrf_vulneravel' %}">Abrir
+            comparação vulnerável</a>{% endif %}
+    </section>
+</div>
+<section class="explanation">
+    <h2>Como se proteger</h2>
+    <p>Mantenha <code>CsrfViewMiddleware</code> ativo e inclua
+        <code>{% templatetag openblock %} csrf_token {% templatetag closeblock %}</code> em formulários POST internos.
+        Não use <code>@csrf_exempt</code> em operações que alteram estado sem uma justificativa técnica e proteções
+        alternativas adequadas.</p>
+    <p><strong>Princípios relacionados:</strong> integridade e autenticidade da ação solicitada.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}Início | SecureLab{% endblock %}
+{% block content %}
+<section class="hero">
+  <span class="eyebrow">PROJETO ACADÊMICO · PYTHON + DJANGO</span>
+  <h1>Aprenda segurança web<br><span>na prática.</span></h1>
+  <p>Explore três vulnerabilidades comuns, compare exemplos inseguros com proteções do Django e entenda os princípios de
+    segurança envolvidos.</p>
+  <a class="button" href="{% url 'sql_injection' %}">Começar laboratório <span aria-hidden="true">→</span></a>
+</section>
+<section class="section-heading">
+  <h2>Laboratórios disponíveis</h2>
+  <p>Escolha um tema para iniciar a demonstração.</p>
+</section>
+<div class="cards">
+  <article class="card">
+    <div class="card-icon">01</div>
+    <h3>SQL Injection</h3>
+    <p>Veja como entradas manipuladas podem alterar uma consulta SQL e compare com o ORM do Django.</p><a
+      href="{% url 'sql_injection' %}">Abrir laboratório →</a>
+  </article>
+  <article class="card">
+    <div class="card-icon">02</div>
+    <h3>Cross-Site Scripting (XSS)</h3>
+    <p>Compare a exibição segura de texto com uma página didática que interpreta conteúdo como HTML.</p><a
+      href="{% url 'xss_protegido' %}">Abrir laboratório →</a>
+  </article>
+  <article class="card">
+    <div class="card-icon">03</div>
+    <h3>Cross-Site Request Forgery (CSRF)</h3>
+    <p>Observe a validação de formulários e o efeito de remover a proteção contra requisições forjadas.</p><a
+      href="{% url 'csrf_protegido' %}">Abrir laboratório →</a>
+  </article>
+</div>
+<div class="warning"><strong>Ambiente de estudo:</strong> as rotas vulneráveis são intencionais e existem apenas para
+  demonstração local. Não publique o projeto nem use dados reais.</div>
+{% endblock %}

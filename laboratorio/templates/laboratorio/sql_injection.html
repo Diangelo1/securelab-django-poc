@@ -1,0 +1,47 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}SQL Injection | SecureLab{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">LABORATÓRIO 01</span>
+  <h1>SQL Injection</h1>
+  <p>Compare uma consulta insegura com uma consulta protegida pelo ORM do Django.</p>
+</div>
+<section class="panel">
+  <form method="get">
+    <label for="nome">Nome para pesquisar</label>
+    <div class="search-row"><input id="nome" name="nome" value="{{ termo }}" placeholder="Ex.: Ana Souza"><button
+        type="submit">Pesquisar</button></div>
+    <p class="help">Para a demonstração controlada, experimente: <code>' OR '1'='1' -- </code></p>
+  </form>
+</section>
+{% if termo %}
+<div class="results-grid">
+  <section class="panel danger-panel">
+    <div class="status status-danger">VULNERÁVEL · EXEMPLO DIDÁTICO</div>
+    <h2>Consulta SQL montada por texto</h2>
+    <p>A entrada é inserida diretamente na consulta. Um texto especialmente preparado pode mudar sua condição.</p>
+    <pre><code>{{ consulta }}</code></pre>
+    {% if erro %}<p class="error">{{ erro }}</p>{% endif %}
+    <p><strong>Registros retornados:</strong> {{ vulneraveis|length }}</p>
+    <ul>{% for item in vulneraveis %}<li>{{ item.0 }} — {{ item.1 }}</li>{% empty %}<li>Nenhum registro retornado.</li>
+      {% endfor %}</ul>
+  </section>
+  <section class="panel safe-panel">
+    <div class="status status-safe">PROTEGIDO · ORM DO DJANGO</div>
+    <h2>Consulta com valor tratado como dado</h2>
+    <p>O ORM separa a entrada da estrutura da consulta. O texto é procurado como um nome literal.</p>
+    <pre><code>UsuarioDemo.objects.filter(nome=termo)</code></pre>
+    <p><strong>Registros retornados:</strong> {{ protegidos|length }}</p>
+    <ul>{% for item in protegidos %}<li>{{ item.0 }} — {{ item.1 }}</li>{% empty %}<li>Nenhum registro correspondente.
+      </li>{% endfor %}</ul>
+  </section>
+</div>
+{% endif %}
+<section class="explanation">
+  <h2>Como se proteger</h2>
+  <p>Prefira o ORM do Django. Se precisar escrever SQL manualmente, use parâmetros separados da consulta, por exemplo
+    <code>cursor.execute("SELECT ... WHERE nome = %s", [nome])</code> (a sintaxe do marcador depende do banco usado).
+  </p>
+  <p><strong>Princípios relacionados:</strong> confidencialidade e integridade; dependendo do impacto, disponibilidade.
+  </p>
+</section>
+{% endblock %}

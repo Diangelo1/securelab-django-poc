@@ -1,0 +1,31 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}XSS protegido | SecureLab{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">LABORATÓRIO 02</span>
+    <h1>Cross-Site Scripting (XSS)</h1>
+    <p>Esta página apresenta a mensagem como texto, usando o escape automático dos templates Django.</p>
+</div>
+<div class="two-col">
+    <section class="panel">
+        <h2>Publicar mensagem de teste</h2>
+        <form method="post">{% csrf_token %}<label for="mensagem">Mensagem</label><textarea id="mensagem"
+                name="mensagem" rows="4" maxlength="500" placeholder="Digite uma mensagem fictícia"></textarea><button
+                type="submit">Salvar mensagem</button></form>
+        <p class="help">Teste didático: <code>&lt;script&gt;alert('XSS de demonstração')&lt;/script&gt;</code></p>
+    </section>
+    <section class="panel safe-panel">
+        <div class="status status-safe">PROTEGIDO</div>
+        <h2>Resultado renderizado</h2>
+        <div class="message-output">{% if mensagem %}{{ mensagem }}{% else %}<span class="muted">Sua mensagem aparecerá
+                aqui.</span>{% endif %}</div>
+        <p class="help">O conteúdo é exibido como texto, não como código executável.</p>
+    </section>
+</div>
+<section class="explanation">
+    <h2>Comparar com o exemplo vulnerável</h2>
+    <p>Acesse a página vulnerável somente no ambiente local para ver por que marcar conteúdo do usuário como HTML seguro
+        pode permitir a execução de scripts.</p><a class="button button-secondary"
+        href="{% url 'xss_vulneravel' %}">Abrir demonstração vulnerável</a>
+    <p><strong>Princípios relacionados:</strong> confidencialidade e integridade; o impacto depende do contexto.</p>
+</section>
+{% endblock %}

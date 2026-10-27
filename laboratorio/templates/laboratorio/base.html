@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SecureLab{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'laboratorio/css/style.css' %}">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="{% url 'inicio' %}"><span class="brand-icon">S</span><span>SecureLab<small>Laboratório de
+          Segurança Web</small></span></a>
+    <nav>
+      <a href="{% url 'inicio' %}">Início</a>
+      <a href="{% url 'sql_injection' %}">SQL Injection</a>
+      <a href="{% url 'xss_protegido' %}">XSS</a>
+      <a href="{% url 'csrf_protegido' %}">CSRF</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% if messages %}{% for message in messages %}<div class="notice">{{ message }}</div>{% endfor %}{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">SecureLab · Projeto acadêmico de segurança web · Somente ambiente local</footer>
+</body>
+
+</html>
